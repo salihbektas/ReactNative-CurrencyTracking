@@ -13,9 +13,20 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Button title="Getir" onPress={getir} />
-      <Text>Open up App.js to start working on your app!</Text>
       <StatusBar style="auto" />
+      <View style={{flex: 2, width:"100%", backgroundColor: "powderblue", justifyContent: "center", alignItems: "center"}}>
+        <Text>Bu alanda grafik aralıkları seçimi olucak</Text>
+      </View>
+
+      <View style={{flex: 6, width:"100%", backgroundColor: "tomato", justifyContent: "center", alignItems: "center"}}>
+        <Text>Bu alanda grafik olucak</Text>
+      </View>
+
+      <View style={{flex: 2, width:"100%", flexDirection: "row", backgroundColor: "purple", justifyContent: "center", alignItems: "center"}} >
+        <Button title="Getir" onPress={getir} />
+        <Text>Open up App.js to start working on your app!</Text>
+
+      </View>
     </View>
   );
 }
