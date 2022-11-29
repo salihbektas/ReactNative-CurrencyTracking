@@ -1,13 +1,14 @@
+import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 
-export default function Home() {
+export default function Home({navigation, route}) {
 
   const [current, setCurrent] = useState("")
-  const [base, setbase] = useState("USD")
+  const [base, setBase] = useState("USD")
   const [target, setTarget] = useState("TRY")
 
   function getir() {
@@ -16,9 +17,18 @@ export default function Home() {
     .catch(error => console.error(error));
   }
 
+  useFocusEffect(()=>{
+    if(route.params){
+      if(route.params.operation === "setBase")
+        setBase(route.params.currency)
+      if(route.params.operation === "setTarget")
+        setTarget(route.params.currency)
+    }
+  })
+
   useEffect(() => {
     getir()
-  }, [])
+  }, [base, target])
 
 
   return (
@@ -35,11 +45,16 @@ export default function Home() {
       <View style={{flex: 2, width:"100%", flexDirection: "row", backgroundColor: "seagreen", justifyContent: "space-evenly", alignItems: "center"}} >
         
         <Text>{"1"}</Text>
-        <Text>{base}</Text>
+        <Pressable style={{backgroundColor: "dodgerblue", padding: 8, borderRadius: 12}}
+                    onPress={() => navigation.navigate("CurrencySelector", {operation:"setBase"})}>
+          <Text>{base}</Text>
+        </Pressable>
         <Text>{"="}</Text>
         <Text>{current}</Text>
-        <Text>{target}</Text>
-
+        <Pressable style={{backgroundColor: "dodgerblue", padding: 8, borderRadius: 12}}
+                    onPress={() => navigation.navigate("CurrencySelector", {operation:"setTarget"})}>
+          <Text>{target}</Text>
+        </Pressable>
       </View>
     </View>
   );
