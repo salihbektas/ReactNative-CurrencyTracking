@@ -20,33 +20,33 @@ export default function Home({navigation, route}) {
   }
 
   function getir() {
-    axios.get(`https://api.exchangerate.host/timeseries?start_date=2022-11-27&end_date=2022-12-01&base=${base}&symbols=${target}`)
-    .then(response => setCurrent(response.data.rates))
+    axios.get(`https://api.exchangerate.host/timeseries?start_date=${subtractDays(5)}&end_date=${subtractDays(0)}&base=${base}&symbols=${target}`)
+    .then(response => {setCurrent(response.data.rates);setReady(true)})
     .catch(error => console.error(error));
   }
 
   useFocusEffect(()=>{
-    console.log("aaa")
-
     if(route.params){
       if(route.params.operation === "setBase")
         setBase(route.params.currency)
       if(route.params.operation === "setTarget"){
-        setReady(false)
         setTarget(route.params.currency)
       }
     }
   })
 
   useEffect(() => {
+    //setReady(false)
     getir()
   }, [base, target])
 
+  /*
   // TODO atrget değişiminde grafik hata yapıyor contex geçişini hızlandır
   useEffect(() => {
     console.log("çalıştım")
-    setReady(true)
-  }, [current])
+    //setReady(true)
+  }, [current[subtractDays(0)][target], current[subtractDays(0)][base]])
+  */
 
 
   return (
@@ -88,7 +88,7 @@ export default function Home({navigation, route}) {
             backgroundColor: "#000000",
             backgroundGradientFrom: "#999999",
             backgroundGradientTo: "#999999",
-            decimalPlaces: 2, // optional, defaults to 2dp
+            decimalPlaces: 3, // optional, defaults to 2dp
             color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
             labelColor: (opacity = 1) => `rgba(125, 255, 255, ${opacity})`,
             style: {
@@ -113,10 +113,10 @@ export default function Home({navigation, route}) {
           <Text>{base}</Text>
         </Pressable>
         <Text>{"="}</Text>
-        {current ? <Text>{current[subtractDays(0)][target]}</Text>: ""}
+        {current && ready ? <Text>{current[subtractDays(0)][target]}</Text>: ""}
         
         <Pressable style={{backgroundColor: "dodgerblue", padding: 8, borderRadius: 12}}
-                    onPress={() => navigation.navigate("CurrencySelector", {operation:"setTarget"})}>
+                    onPress={() => {setReady(false); navigation.navigate("CurrencySelector", {operation:"setTarget"})}}>
           <Text>{target}</Text>
         </Pressable>
       </View>
