@@ -4,14 +4,17 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
+import { useCurrencies, useCurrencyDispatch } from "../../context/StateContext";
 
 
 export default function Home({navigation, route}) {
 
-  const [current, setCurrent] = useState(null)
-  const [base, setBase] = useState("USD")
-  const [target, setTarget] = useState("TRY")
-  const [ready, setReady] = useState(false)
+  const [current, setCurrent] = useState([])
+  const base = useCurrencies().base
+  const target = useCurrencies().target
+  const ready = useCurrencies().ready
+  const dispatch = useCurrencyDispatch()
+
 
   function subtractDays(numOfDays, date = new Date()) {
     date.setDate(date.getDate() - numOfDays);
@@ -21,32 +24,24 @@ export default function Home({navigation, route}) {
 
   function getir() {
     axios.get(`https://api.exchangerate.host/timeseries?start_date=${subtractDays(5)}&end_date=${subtractDays(0)}&base=${base}&symbols=${target}`)
-    .then(response => {setCurrent(response.data.rates);setReady(true)})
+    .then(response => setCurrent(response.data.rates))
     .catch(error => console.error(error));
   }
 
-  useFocusEffect(()=>{
-    if(route.params){
-      if(route.params.operation === "setBase")
-        setBase(route.params.currency)
-      if(route.params.operation === "setTarget"){
-        setTarget(route.params.currency)
-      }
-    }
-  })
 
   useEffect(() => {
-    //setReady(false)
     getir()
   }, [base, target])
 
-  /*
-  // TODO atrget değişiminde grafik hata yapıyor contex geçişini hızlandır
+
   useEffect(() => {
-    console.log("çalıştım")
-    //setReady(true)
-  }, [current[subtractDays(0)][target], current[subtractDays(0)][base]])
-  */
+    if(current.length!== 0)
+      dispatch({
+        type:"setReady",
+        ready:true
+      })
+  }, [JSON.stringify(current)])
+  
 
 
   return (
@@ -59,7 +54,7 @@ export default function Home({navigation, route}) {
       <View style={{flex: 6, width:"100%", backgroundColor: "tomato", justifyContent: "center", alignItems: "center"}}>
         <Text>Bu alanda grafik olucak</Text>
 
-        {current && ready ? <LineChart
+        {ready ? <LineChart
           data={{
             labels: [subtractDays(5).slice(5,10), 
                      subtractDays(4).slice(5,10),
@@ -71,6 +66,7 @@ export default function Home({navigation, route}) {
             datasets: [
               {
                 data: [
+                  current[subtractDays(5)][target],
                   current[subtractDays(4)][target],
                   current[subtractDays(3)][target],
                   current[subtractDays(2)][target],
@@ -116,7 +112,7 @@ export default function Home({navigation, route}) {
         {current && ready ? <Text>{current[subtractDays(0)][target]}</Text>: ""}
         
         <Pressable style={{backgroundColor: "dodgerblue", padding: 8, borderRadius: 12}}
-                    onPress={() => {setReady(false); navigation.navigate("CurrencySelector", {operation:"setTarget"})}}>
+                    onPress={() => navigation.navigate("CurrencySelector", {operation:"setTarget"})}>
           <Text>{target}</Text>
         </Pressable>
       </View>
