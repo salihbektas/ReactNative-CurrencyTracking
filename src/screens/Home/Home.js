@@ -2,7 +2,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { useCurrencies, useCurrencyDispatch } from "../../context/StateContext";
 
@@ -98,7 +98,7 @@ export default function Home({navigation, route}) {
           }}
           bezier
 
-        /> : null}
+        /> : <ActivityIndicator size="large" /> }
       </View>
 
       <View style={{flex: 2, width:"100%", flexDirection: "row", backgroundColor: "seagreen", justifyContent: "space-evenly", alignItems: "center"}} >
@@ -109,7 +109,7 @@ export default function Home({navigation, route}) {
           <Text>{base}</Text>
         </Pressable>
         <Text>{"="}</Text>
-        {current && ready ? <Text>{current[subtractDays(0)][target]}</Text>: ""}
+        <Text>{ current && ready ? current[subtractDays(0)][target] : "-------"}</Text>
         
         <Pressable style={{backgroundColor: "dodgerblue", padding: 8, borderRadius: 12}}
                     onPress={() => navigation.navigate("CurrencySelector", {operation:"setTarget"})}>
