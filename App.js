@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Home from './src/screens/Home/Home';
 import CurrencySelector from './src/screens/CurrencySelector/CurrencySelector';
-import { CurrencyProvider } from './src/context/StateContext';
+import { CurrencyProvider } from './src/context/CurrencyContext';
 
 
 

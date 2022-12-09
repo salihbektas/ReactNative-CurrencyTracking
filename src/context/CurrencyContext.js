@@ -40,6 +40,9 @@ function stateReducer(states, action) {
     case 'setReady': {
       return { ...states, ready: action.ready };
     }
+    case 'setRange': {
+      return { ...states, range: action.range, ready: false  };
+    }
     default: {
       throw Error('Unknown action: ' + action.type);
     }
@@ -49,5 +52,6 @@ function stateReducer(states, action) {
 const initialStates = {
   base: "USD",
   target: "EUR",
-  ready: false
+  ready: false,
+  range: "week"
 }

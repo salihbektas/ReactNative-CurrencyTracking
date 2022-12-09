@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 import currencies from "../../../currencies.json";
-import { useCurrencyDispatch } from "../../context/StateContext";
+import { useCurrencyDispatch } from "../../context/CurrencyContext";
 
 
 export default function CurrencySelector({navigation, route}){

@@ -1,11 +1,10 @@
-import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { useCurrencies, useCurrencyDispatch } from "../../context/StateContext";
-
+import RangeSelector from "../../component/RangeSelector";
+import { useCurrencies, useCurrencyDispatch } from "../../context/CurrencyContext";
 
 export default function Home({navigation, route}) {
 
@@ -13,7 +12,41 @@ export default function Home({navigation, route}) {
   const base = useCurrencies().base
   const target = useCurrencies().target
   const ready = useCurrencies().ready
+  const range = useCurrencies().range
   const dispatch = useCurrencyDispatch()
+
+  let starter, seperator
+
+  switch (range) {
+    case "week":
+      starter = 7
+      seperator = 1
+      break;
+    case "mounth":
+      starter = 30
+      seperator = 5
+      break;
+    case "6 mounth":
+      starter = 180
+      seperator = 30
+      break;
+    case "year":
+      starter = 365
+      seperator = 60
+      break;
+  }
+
+  const labels = useMemo(() => {
+    let arr = Array(starter)
+    let milestone = starter
+    const step = Math.floor(starter/5)
+    for(let i = 0; i <= starter ; i+=step){
+      arr[i] = subtractDays(milestone).slice(5,10)
+      console.log( )
+      milestone -= step
+    }
+    return arr
+  }, [range])
 
 
   function subtractDays(numOfDays, date = new Date()) {
@@ -22,16 +55,27 @@ export default function Home({navigation, route}) {
     return date.toISOString().slice(0,10);
   }
 
+  function saveData(receivedData){
+    
+    data = Object.keys(receivedData)
+    
+    for(i = 0; i < data.length; ++i){
+      data[i] = receivedData[data[i]][target]
+    }
+
+    setCurrent(data)
+  }
+
   function getir() {
-    axios.get(`https://api.exchangerate.host/timeseries?start_date=${subtractDays(5)}&end_date=${subtractDays(0)}&base=${base}&symbols=${target}`)
-    .then(response => setCurrent(response.data.rates))
+    axios.get(`https://api.exchangerate.host/timeseries?start_date=${subtractDays(starter)}&end_date=${subtractDays(0)}&base=${base}&symbols=${target}`)
+    .then(response => saveData(response.data.rates))
     .catch(error => console.error(error));
   }
 
 
   useEffect(() => {
     getir()
-  }, [base, target])
+  }, [base, target, range])
 
 
   useEffect(() => {
@@ -48,42 +92,32 @@ export default function Home({navigation, route}) {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <View style={{flex: 2, width:"100%", backgroundColor: "powderblue", justifyContent: "center", alignItems: "center"}}>
-        <Text>Bu alanda grafik aralıkları seçimi olucak</Text>
+        <RangeSelector/>
       </View>
 
-      <View style={{flex: 6, width:"100%", backgroundColor: "tomato", justifyContent: "center", alignItems: "center"}}>
-        <Text>Bu alanda grafik olucak</Text>
+      <View style={{flex: 6, width:"100%", justifyContent: "center", alignItems: "center", paddingRight:10, backgroundColor:"tomato"}}>
 
         {ready ? <LineChart
           data={{
-            labels: [subtractDays(5).slice(5,10), 
-                     subtractDays(4).slice(5,10),
-                     subtractDays(3).slice(5,10),
-                     subtractDays(2).slice(5,10),
-                     subtractDays(1).slice(5,10), 
-                     subtractDays(0).slice(5,10)
-                    ],
+            labels: labels,
             datasets: [
               {
-                data: [
-                  current[subtractDays(5)][target],
-                  current[subtractDays(4)][target],
-                  current[subtractDays(3)][target],
-                  current[subtractDays(2)][target],
-                  current[subtractDays(1)][target],
-                  current[subtractDays(0)][target],
-                ]
+                data: current
               }
             ]
           }}
           width={Dimensions.get("window").width} // from react-native
-          height={300}
+          height={Dimensions.get("window").height*0.6}
 
-          yAxisInterval={1} // optional, defaults to 1
+          yAxisInterval={seperator} // optional, defaults to 1
+          withDots= {true}
+          withOuterLines= {false}
+          //verticalLabelRotation={90}
+          segments={6}
+          xLabelsOffset={10}
           chartConfig={{
-            backgroundColor: "#000000",
-            backgroundGradientFrom: "#999999",
-            backgroundGradientTo: "#999999",
+            backgroundGradientFrom: "#ff6347",
+            backgroundGradientTo: "#ff6347",
             decimalPlaces: 3, // optional, defaults to 2dp
             color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
             labelColor: (opacity = 1) => `rgba(125, 255, 255, ${opacity})`,
@@ -91,13 +125,9 @@ export default function Home({navigation, route}) {
               borderRadius: 16
             },
             propsForDots: {
-              r: "1",
-              strokeWidth: "1",
-              stroke: "#22a726"
+              r: "1"
             }
           }}
-          bezier
-
         /> : <ActivityIndicator size="large" /> }
       </View>
 
@@ -109,7 +139,7 @@ export default function Home({navigation, route}) {
           <Text>{base}</Text>
         </Pressable>
         <Text>{"="}</Text>
-        <Text>{ current && ready ? current[subtractDays(0)][target] : "-------"}</Text>
+        <Text>{ current && ready ? current[current.length-1] : "-------"}</Text>
         
         <Pressable style={{backgroundColor: "dodgerblue", padding: 8, borderRadius: 12}}
                     onPress={() => navigation.navigate("CurrencySelector", {operation:"setTarget"})}>
