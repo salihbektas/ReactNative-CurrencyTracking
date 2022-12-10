@@ -19,30 +19,29 @@ export default function Home({navigation, route}) {
 
   switch (range) {
     case "week":
-      starter = 7
+      starter = 6
       seperator = 1
       break;
     case "mounth":
       starter = 30
-      seperator = 5
+      seperator = 6
       break;
     case "6 mounth":
       starter = 180
-      seperator = 30
+      seperator = 36
       break;
     case "year":
       starter = 365
-      seperator = 60
+      seperator = 73
       break;
   }
 
   const labels = useMemo(() => {
-    let arr = Array(starter)
+    let arr = Array(starter+1)
     let milestone = starter
     const step = Math.floor(starter/5)
-    for(let i = 0; i <= starter ; i+=step){
+    for(let i = 0; i < starter ; i+=step){
       arr[i] = subtractDays(milestone).slice(5,10)
-      console.log( )
       milestone -= step
     }
     return arr
@@ -114,7 +113,7 @@ export default function Home({navigation, route}) {
           withOuterLines= {false}
           //verticalLabelRotation={90}
           segments={6}
-          xLabelsOffset={10}
+          //xLabelsOffset={10}
           chartConfig={{
             backgroundGradientFrom: "#ff6347",
             backgroundGradientTo: "#ff6347",
