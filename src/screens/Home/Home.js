@@ -5,6 +5,8 @@ import { ActivityIndicator, Dimensions, Pressable, StyleSheet, Text, View } from
 import { LineChart } from "react-native-chart-kit";
 import RangeSelector from "../../component/RangeSelector";
 import { useCurrencies, useCurrencyDispatch } from "../../context/CurrencyContext";
+import colors from "../../Colors";
+
 
 export default function Home({navigation, route}) {
 
@@ -90,11 +92,11 @@ export default function Home({navigation, route}) {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <View style={{flex: 2, width:"100%", backgroundColor: "powderblue", justifyContent: "center", alignItems: "center"}}>
+      <View style={{flex: 2, width:"100%", backgroundColor: colors.white, justifyContent: "center", alignItems: "center"}}>
         <RangeSelector/>
       </View>
 
-      <View style={{flex: 6, width:"100%", justifyContent: "center", alignItems: "center", paddingRight:10, backgroundColor:"tomato"}}>
+      <View style={{flex: 7, width:"100%", justifyContent: "center", alignItems: "center", paddingRight:10, backgroundColor: colors.white}}>
 
         {ready ? <LineChart
           data={{
@@ -106,7 +108,7 @@ export default function Home({navigation, route}) {
             ]
           }}
           width={Dimensions.get("window").width} // from react-native
-          height={Dimensions.get("window").height*0.6}
+          height={Dimensions.get("window").height*0.7}
 
           yAxisInterval={seperator} // optional, defaults to 1
           withDots= {true}
@@ -115,34 +117,32 @@ export default function Home({navigation, route}) {
           segments={6}
           //xLabelsOffset={10}
           chartConfig={{
-            backgroundGradientFrom: "#ff6347",
-            backgroundGradientTo: "#ff6347",
+            backgroundGradientFrom: colors.white,
+            backgroundGradientTo: colors.white,
             decimalPlaces: 3, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(125, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16
-            },
+            color: () => colors.blue,
+            labelColor: () => colors.blue,
+
             propsForDots: {
-              r: "1"
+              r: "0"
             }
           }}
         /> : <ActivityIndicator size="large" /> }
       </View>
 
-      <View style={{flex: 2, width:"100%", flexDirection: "row", backgroundColor: "seagreen", justifyContent: "space-evenly", alignItems: "center"}} >
+      <View style={{flex: 1, width:"100%", flexDirection: "row", backgroundColor: colors.white, justifyContent: "space-evenly", alignItems: "center", paddingBottom:20}} >
         
-        <Text>{"1"}</Text>
-        <Pressable style={{backgroundColor: "dodgerblue", padding: 8, borderRadius: 12}}
+        <Text style={{color: colors.dark, fontSize: 20}}>{"1"}</Text>
+        <Pressable style={{backgroundColor: colors.water, padding: 8, borderRadius: 12}}
                     onPress={() => navigation.navigate("CurrencySelector", {operation:"setBase"})}>
-          <Text>{base}</Text>
+          <Text style={{color: colors.dark, fontSize: 20}}>{base}</Text>
         </Pressable>
-        <Text>{"="}</Text>
-        <Text>{ current && ready ? current[current.length-1] : "-------"}</Text>
+        <Text style={{color: colors.dark, fontSize: 20}}>{"="}</Text>
+        <Text style={{color: colors.dark, fontSize: 20}}>{ current && ready ? current[current.length-1] : "-------"}</Text>
         
-        <Pressable style={{backgroundColor: "dodgerblue", padding: 8, borderRadius: 12}}
+        <Pressable style={{backgroundColor: colors.water, padding: 8, borderRadius: 12}}
                     onPress={() => navigation.navigate("CurrencySelector", {operation:"setTarget"})}>
-          <Text>{target}</Text>
+          <Text style={{color: colors.dark, fontSize: 20}}>{target}</Text>
         </Pressable>
       </View>
     </View>

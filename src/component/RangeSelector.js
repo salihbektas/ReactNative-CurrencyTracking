@@ -1,4 +1,5 @@
 import { Pressable, Text, View } from "react-native"
+import colors from "../Colors"
 import { useCurrencies, useCurrencyDispatch } from "../context/CurrencyContext"
 
 
@@ -17,25 +18,21 @@ export default function RangeSelector(){
 
     return(
         <View style={{flex: 1, width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-evenly"}} >
-            <Pressable style={{backgroundColor: selectedRange==="week" ? "firebrick" : "dodgerblue", paddingHorizontal: 8}}
+            <Pressable style={{ paddingHorizontal: 8}}
                 onPress={()=>onPress("week")}>
-                <Text >week</Text>
+                <Text style={{color: selectedRange === "week" ? colors.blue : colors.dark, fontSize: 20}}>week</Text>
             </Pressable>
-            <Pressable style={{backgroundColor: selectedRange==="mounth" ? "firebrick" : "dodgerblue", paddingHorizontal: 8}}
+            <Pressable style={{ paddingHorizontal: 8}}
                 onPress={()=>onPress("mounth")}>
-                <Text >mounth</Text>
+                <Text style={{color: selectedRange === "mounth" ? colors.blue : colors.dark, fontSize: 20}}>mounth</Text>
             </Pressable>
-            <Pressable style={{backgroundColor: selectedRange==="6 mounth" ? "firebrick" : "dodgerblue", paddingHorizontal: 8}}
+            <Pressable style={{ paddingHorizontal: 8}}
                 onPress={()=>onPress("6 mounth")}>
-                <Text >6 mounth</Text>
+                <Text style={{color: selectedRange === "6 mounth" ? colors.blue : colors.dark, fontSize: 20}}>6 mounth</Text>
             </Pressable>
-            <Pressable style={{backgroundColor: selectedRange==="year" ? "firebrick" : "dodgerblue", paddingHorizontal: 8}}
+            <Pressable style={{ paddingHorizontal: 8}}
                 onPress={()=>onPress("year")}>
-                <Text >year</Text>
-            </Pressable>
-            <Pressable style={{backgroundColor: selectedRange==="all" ? "firebrick" : "dodgerblue", paddingHorizontal: 8}}
-                onPress={()=>onPress("all")}>
-                <Text >all</Text>
+                <Text style={{color: selectedRange === "year" ? colors.blue : colors.dark, fontSize: 20}}>year</Text>
             </Pressable>
         </View>
     )
