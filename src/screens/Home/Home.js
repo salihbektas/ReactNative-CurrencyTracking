@@ -6,6 +6,7 @@ import { LineChart } from "react-native-chart-kit";
 import RangeSelector from "../../component/RangeSelector";
 import { useCurrencies, useCurrencyDispatch } from "../../context/CurrencyContext";
 import colors from "../../Colors";
+import ModeSwitch from "../../component/ModeSwitch";
 
 
 export default function Home({navigation, route}) {
@@ -15,6 +16,7 @@ export default function Home({navigation, route}) {
   const target = useCurrencies().target
   const ready = useCurrencies().ready
   const range = useCurrencies().range
+  const darkMode = useCurrencies().darkMode
   const dispatch = useCurrencyDispatch()
 
   let starter, seperator
@@ -90,13 +92,14 @@ export default function Home({navigation, route}) {
 
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <View style={{flex: 2, width:"100%", backgroundColor: colors.white, justifyContent: "center", alignItems: "center"}}>
+    <View style={{...styles.container, backgroundColor: darkMode?colors.dark:colors.white}}>
+      <StatusBar style={darkMode?"light":"dark"} />
+      <View style={{flex: 3, width:"100%", justifyContent: "center", alignItems: "center"}}>
+        <ModeSwitch/>
         <RangeSelector/>
       </View>
 
-      <View style={{flex: 7, width:"100%", justifyContent: "center", alignItems: "center", paddingRight:10, backgroundColor: colors.white}}>
+      <View style={{flex: 7, width:"100%", justifyContent: "center", alignItems: "center", paddingRight:10}}>
 
         {ready ? <LineChart
           data={{
@@ -117,11 +120,11 @@ export default function Home({navigation, route}) {
           segments={6}
           //xLabelsOffset={10}
           chartConfig={{
-            backgroundGradientFrom: colors.white,
-            backgroundGradientTo: colors.white,
+            backgroundGradientFrom: darkMode ? colors.dark : colors.white,
+            backgroundGradientTo: darkMode ? colors.dark : colors.white,
             decimalPlaces: 3, // optional, defaults to 2dp
-            color: () => colors.blue,
-            labelColor: () => colors.blue,
+            color: () => darkMode ? colors.water : colors.blue,
+            labelColor: () => darkMode ? colors.water : colors.blue,
 
             propsForDots: {
               r: "0"
@@ -130,19 +133,19 @@ export default function Home({navigation, route}) {
         /> : <ActivityIndicator size="large" /> }
       </View>
 
-      <View style={{flex: 1, width:"100%", flexDirection: "row", backgroundColor: colors.white, justifyContent: "space-evenly", alignItems: "center", paddingBottom:20}} >
+      <View style={{flex: 1, width:"100%", flexDirection: "row", justifyContent: "space-evenly", alignItems: "center", paddingBottom:20}} >
         
-        <Text style={{color: colors.dark, fontSize: 20}}>{"1"}</Text>
-        <Pressable style={{backgroundColor: colors.water, padding: 8, borderRadius: 12}}
+        <Text style={{color: darkMode ? colors.white : colors.dark, fontSize: 20}}>{"1"}</Text>
+        <Pressable style={{backgroundColor: darkMode ? colors.blue : colors.water, padding: 8, borderRadius: 12}}
                     onPress={() => navigation.navigate("CurrencySelector", {operation:"setBase"})}>
-          <Text style={{color: colors.dark, fontSize: 20}}>{base}</Text>
+          <Text style={{color: darkMode ? colors.white : colors.dark, fontSize: 20}}>{base}</Text>
         </Pressable>
-        <Text style={{color: colors.dark, fontSize: 20}}>{"="}</Text>
-        <Text style={{color: colors.dark, fontSize: 20}}>{ current && ready ? current[current.length-1] : "-------"}</Text>
+        <Text style={{color: darkMode ? colors.white : colors.dark, fontSize: 20}}>{"="}</Text>
+        <Text style={{color: darkMode ? colors.white : colors.dark, fontSize: 20}}>{ current && ready ? current[current.length-1] : "-------"}</Text>
         
-        <Pressable style={{backgroundColor: colors.water, padding: 8, borderRadius: 12}}
+        <Pressable style={{backgroundColor: darkMode ? colors.blue : colors.water, padding: 8, borderRadius: 12}}
                     onPress={() => navigation.navigate("CurrencySelector", {operation:"setTarget"})}>
-          <Text style={{color: colors.dark, fontSize: 20}}>{target}</Text>
+          <Text style={{color: darkMode ? colors.white : colors.dark, fontSize: 20}}>{target}</Text>
         </Pressable>
       </View>
     </View>

@@ -43,6 +43,9 @@ function stateReducer(states, action) {
     case 'setRange': {
       return { ...states, range: action.range, ready: false  };
     }
+    case 'setDarkMode': {
+      return {...states, darkMode: action.darkMode };
+    }
     default: {
       throw Error('Unknown action: ' + action.type);
     }
@@ -53,5 +56,6 @@ const initialStates = {
   base: "USD",
   target: "EUR",
   ready: false,
-  range: "week"
+  range: "week",
+  darkMode: false
 }

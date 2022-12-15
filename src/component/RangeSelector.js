@@ -6,6 +6,7 @@ import { useCurrencies, useCurrencyDispatch } from "../context/CurrencyContext"
 
 export default function RangeSelector(){
     const selectedRange = useCurrencies().range
+    const darkMode = useCurrencies().darkMode
     const dispatch = useCurrencyDispatch()
 
     function onPress(range){
@@ -17,22 +18,22 @@ export default function RangeSelector(){
 
 
     return(
-        <View style={{flex: 1, width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-evenly"}} >
+        <View style={{flex: 3, width: "100%", flexDirection: "row", alignItems: "flex-start", justifyContent: "space-evenly", paddingTop: 8}} >
             <Pressable style={{ paddingHorizontal: 8}}
                 onPress={()=>onPress("week")}>
-                <Text style={{color: selectedRange === "week" ? colors.blue : colors.dark, fontSize: 20}}>week</Text>
+                <Text style={{color: selectedRange === "week" ? darkMode ? colors.water : colors.blue : darkMode ? colors.white : colors.dark, fontSize: 20}}>week</Text>
             </Pressable>
             <Pressable style={{ paddingHorizontal: 8}}
                 onPress={()=>onPress("mounth")}>
-                <Text style={{color: selectedRange === "mounth" ? colors.blue : colors.dark, fontSize: 20}}>mounth</Text>
+                <Text style={{color: selectedRange === "mounth" ? darkMode ? colors.water : colors.blue : darkMode ? colors.white : colors.dark, fontSize: 20}}>mounth</Text>
             </Pressable>
             <Pressable style={{ paddingHorizontal: 8}}
                 onPress={()=>onPress("6 mounth")}>
-                <Text style={{color: selectedRange === "6 mounth" ? colors.blue : colors.dark, fontSize: 20}}>6 mounth</Text>
+                <Text style={{color: selectedRange === "6 mounth" ? darkMode ? colors.water : colors.blue : darkMode ? colors.white : colors.dark, fontSize: 20}}>6 mounth</Text>
             </Pressable>
             <Pressable style={{ paddingHorizontal: 8}}
                 onPress={()=>onPress("year")}>
-                <Text style={{color: selectedRange === "year" ? colors.blue : colors.dark, fontSize: 20}}>year</Text>
+                <Text style={{color: selectedRange === "year" ? darkMode ? colors.water : colors.blue : darkMode ? colors.white : colors.dark, fontSize: 20}}>year</Text>
             </Pressable>
         </View>
     )
