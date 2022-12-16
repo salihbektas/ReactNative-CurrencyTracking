@@ -5,7 +5,10 @@ import Home from './src/screens/Home/Home';
 import CurrencySelector from './src/screens/CurrencySelector/CurrencySelector';
 import { CurrencyProvider } from './src/context/CurrencyContext';
 
+import * as SplashScreen from 'expo-splash-screen';
 
+
+SplashScreen.preventAutoHideAsync()
 
 const Stack = createNativeStackNavigator();
 

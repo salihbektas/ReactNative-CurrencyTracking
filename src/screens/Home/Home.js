@@ -1,17 +1,19 @@
 import axios from "axios";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import RangeSelector from "../../component/RangeSelector";
 import { useCurrencies, useCurrencyDispatch } from "../../context/CurrencyContext";
 import colors from "../../Colors";
 import ModeSwitch from "../../component/ModeSwitch";
+import * as SplashScreen from 'expo-splash-screen';
 
 
 export default function Home({navigation, route}) {
 
   const [current, setCurrent] = useState([])
+  const [appIsReady, setAppIsReady] = useState(false)
   const base = useCurrencies().base
   const target = useCurrencies().target
   const ready = useCurrencies().ready
@@ -88,11 +90,33 @@ export default function Home({navigation, route}) {
         ready:true
       })
   }, [JSON.stringify(current)])
+
+  useEffect(() => {
+    async function prepare() {
+      try {
+
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+
+  
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
   
 
 
   return (
-    <View style={{...styles.container, backgroundColor: darkMode?colors.dark:colors.white}}>
+    <View style={{...styles.container, backgroundColor: darkMode?colors.dark:colors.white}}
+    onLayout={onLayoutRootView} >
       <StatusBar style={darkMode?"light":"dark"} />
       <View style={{flex: 3, width:"100%", justifyContent: "center", alignItems: "center"}}>
         <ModeSwitch/>
