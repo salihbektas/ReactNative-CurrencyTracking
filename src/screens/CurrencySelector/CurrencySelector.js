@@ -1,7 +1,7 @@
 import axios from "axios";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { FlatList, Keyboard, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
 
 import currencies from "../../../currencies.json";
 import colors from "../../Colors";
@@ -40,24 +40,25 @@ export default function CurrencySelector({navigation, route}){
       );
 
     return(
-        <View style={{flex:1, backgroundColor: darkMode ? colors.dark : colors.white}}>
-            <View style={{height:100, width:"100%", justifyContent:"center", alignItems:"center"}}>
-                <TextInput
-                    style={{width:"50%", height:40, borderWidth:2, borderColor: darkMode ? colors.white : colors.dark, borderRadius: 8, color: darkMode ? colors.white : colors.dark, fontSize: 24, paddingLeft: 8}}
-                    onChangeText={setInput}
-                    placeholder="search"
-                    placeholderTextColor={darkMode ? colors.white : colors.dark}
-                    maxLength={3}
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
+            <View style={{flex:1, backgroundColor: darkMode ? colors.dark : colors.white}}>
+                <View style={{height:100, width:"100%", justifyContent:"center", alignItems:"center"}}>
+                    <TextInput
+                        style={{width:"50%", height:40, borderWidth:2, borderColor: darkMode ? colors.white : colors.dark, borderRadius: 8, color: darkMode ? colors.white : colors.dark, fontSize: 24, paddingLeft: 8}}
+                        onChangeText={setInput}
+                        placeholder="search"
+                        placeholderTextColor={darkMode ? colors.white : colors.dark}
+                        maxLength={3}
+                    />
+                </View>
+                <FlatList style={{flex:1, width:"100%"}}
+                    data = {displayed}
+                    renderItem = {renderItem}
+                    keyExtractor = {(_, index) => index}
+                    ItemSeparatorComponent={() => <View style={{height: 3, backgroundColor: darkMode ? colors.water : colors.blue}} />}
+                    numColumns={4}
                 />
             </View>
-            <FlatList style={{flex:1, width:"100%"}}
-                data = {displayed}
-                renderItem = {renderItem}
-                keyExtractor = {(_, index) => index}
-                ItemSeparatorComponent={() => <View style={{height: 3, backgroundColor: darkMode ? colors.water : colors.blue}} />}
-                numColumns={4}
-            />
-
-        </View>
+        </TouchableWithoutFeedback>
     )
 }
