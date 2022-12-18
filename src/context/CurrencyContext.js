@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CurrencyContext = createContext(null);
 
@@ -32,19 +33,26 @@ export function useCurrencyDispatch() {
 function stateReducer(states, action) {
   switch (action.type) {
     case 'setBase': {
+      AsyncStorage.setItem("configs", JSON.stringify({ ...states, base: action.base }))
       return { ...states, base: action.base, ready: false };
     }
     case 'setTarget': {
+      AsyncStorage.setItem("configs", JSON.stringify({ ...states, target: action.target }))
       return { ...states, target: action.target, ready: false };
     }
     case 'setReady': {
       return { ...states, ready: action.ready };
     }
     case 'setRange': {
-      return { ...states, range: action.range, ready: false  };
+      AsyncStorage.setItem("configs", JSON.stringify({ ...states, range: action.range }))
+      return { ...states, range: action.range, ready: false };
     }
     case 'setDarkMode': {
+      AsyncStorage.setItem("configs", JSON.stringify({...states, darkMode: action.darkMode }))
       return {...states, darkMode: action.darkMode };
+    }
+    case 'load': {
+      return {...states, base: action.base, target: action.target, range: action.range, darkMode: action.darkMode}
     }
     default: {
       throw Error('Unknown action: ' + action.type);

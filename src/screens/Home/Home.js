@@ -8,6 +8,7 @@ import { useCurrencies, useCurrencyDispatch } from "../../context/CurrencyContex
 import colors from "../../Colors";
 import ModeSwitch from "../../component/ModeSwitch";
 import * as SplashScreen from 'expo-splash-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function Home({navigation, route}) {
@@ -20,6 +21,7 @@ export default function Home({navigation, route}) {
   const range = useCurrencies().range
   const darkMode = useCurrencies().darkMode
   const dispatch = useCurrencyDispatch()
+
 
   let starter, seperator
 
@@ -74,7 +76,10 @@ export default function Home({navigation, route}) {
   function getir() {
     axios.get(`https://api.exchangerate.host/timeseries?start_date=${subtractDays(starter)}&end_date=${subtractDays(0)}&base=${base}&symbols=${target}`)
     .then(response => saveData(response.data.rates))
-    .catch(error => console.error(error));
+    .catch(error => {
+      console.error(error)
+      alert("database could not be reached")
+    });
   }
 
 
@@ -93,11 +98,21 @@ export default function Home({navigation, route}) {
 
   useEffect(() => {
     async function prepare() {
+      let configs
       try {
-
+        configs = await AsyncStorage.getItem('configs')
+        configs = configs != null ? JSON.parse(configs) : null
       } catch (e) {
         console.warn(e);
       } finally {
+        if(configs)
+          dispatch({
+            type: "load",
+            base: configs.base,
+            target: configs.target,
+            range: configs.range,
+            darkMode: configs.darkMode
+          })
         setAppIsReady(true);
       }
     }
@@ -112,6 +127,10 @@ export default function Home({navigation, route}) {
     }
   }, [appIsReady]);
   
+
+  if (!appIsReady) {
+    return null;
+  }
 
 
   return (
