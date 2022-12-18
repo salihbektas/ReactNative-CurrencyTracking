@@ -1,8 +1,5 @@
-import axios from "axios";
-import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { FlatList, Keyboard, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
-
+import { FlatList, Keyboard, Pressable, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
 import currencies from "../../../currencies.json";
 import colors from "../../Colors";
 import { useCurrencies, useCurrencyDispatch } from "../../context/CurrencyContext";

@@ -147,25 +147,18 @@ export default function Home({navigation, route}) {
         {ready ? <LineChart
           data={{
             labels: labels,
-            datasets: [
-              {
-                data: current
-              }
-            ]
+            datasets: [{data: current}]
           }}
-          width={Dimensions.get("window").width} // from react-native
+          width={Dimensions.get("window").width}
           height={Dimensions.get("window").height*0.7}
-
-          yAxisInterval={seperator} // optional, defaults to 1
+          yAxisInterval={seperator}
           withDots= {true}
           withOuterLines= {false}
-          //verticalLabelRotation={90}
           segments={6}
-          //xLabelsOffset={10}
           chartConfig={{
             backgroundGradientFrom: darkMode ? colors.dark : colors.white,
             backgroundGradientTo: darkMode ? colors.dark : colors.white,
-            decimalPlaces: 3, // optional, defaults to 2dp
+            decimalPlaces: 3,
             color: () => darkMode ? colors.water : colors.blue,
             labelColor: () => darkMode ? colors.water : colors.blue,
 
@@ -204,4 +197,3 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
   });
-  
