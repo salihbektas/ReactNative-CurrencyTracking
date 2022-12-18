@@ -9,9 +9,8 @@ export default function ModeSwitch(){
     const dispatch = useCurrencyDispatch()
 
     return(
-        <View style={{flex:2, justifyContent: "flex-end", alignItems: "flex-end", width:"100%", flexDirection: "row"}}>
-            <Image source={require("../../assets/sun.png")} style={{...styles.sunIcon, tintColor: darkMode ? colors.white : colors.sun}} />
-
+        <View style={styles.container}>
+            <Image source={require("../../assets/sun.png")} style={styles.sunIcon(darkMode)} />
 
             <Switch
                 thumbColor = {darkMode ? colors.water : colors.dark}
@@ -20,26 +19,35 @@ export default function ModeSwitch(){
                 value={darkMode}
             />
 
-            <Image source={require("../../assets/moon.png")} style={{...styles.moonIcon, tintColor: darkMode ? colors.water : colors.dark}} />
+            <Image source={require("../../assets/moon.png")} style={styles.moonIcon(darkMode)} />
 
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    sunIcon: {
+    container: {flex:2,
+        justifyContent: "flex-end",
+        alignItems: "flex-end",
+        width:"100%",
+        flexDirection: "row"
+    },
+
+    sunIcon: darkMode => ({
         width:36, 
         height:36,
         resizeMode: "contain",  
         marginLeft: 5,
         marginBottom: 5,
-      },
+        tintColor: darkMode ? colors.white : colors.sun
+      }),
     
-      moonIcon: {
+      moonIcon: darkMode => ({
         width:50, 
         height:50,
         resizeMode: "contain", 
-        marginRight:10
-      }
+        marginRight:10,
+        tintColor: darkMode ? colors.water : colors.dark
+      })
     
 })

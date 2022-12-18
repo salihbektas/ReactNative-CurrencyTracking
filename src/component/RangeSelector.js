@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from "react-native"
+import { Pressable, StyleSheet, Text, View } from "react-native"
 import colors from "../Colors"
 import { useCurrencies, useCurrencyDispatch } from "../context/CurrencyContext"
 
@@ -18,24 +18,36 @@ export default function RangeSelector(){
 
 
     return(
-        <View style={{flex: 3, width: "100%", flexDirection: "row", alignItems: "flex-start", justifyContent: "space-evenly", paddingTop: 8}} >
-            <Pressable style={{ paddingHorizontal: 8}}
-                onPress={()=>onPress("week")}>
-                <Text style={{color: selectedRange === "week" ? darkMode ? colors.water : colors.blue : darkMode ? colors.white : colors.dark, fontSize: 20}}>week</Text>
+        <View style={styles.container} >
+            <Pressable onPress={()=>onPress("week")}>
+                <Text style={styles.text(selectedRange === "week", darkMode)}>week</Text>
             </Pressable>
-            <Pressable style={{ paddingHorizontal: 8}}
-                onPress={()=>onPress("mounth")}>
-                <Text style={{color: selectedRange === "mounth" ? darkMode ? colors.water : colors.blue : darkMode ? colors.white : colors.dark, fontSize: 20}}>mounth</Text>
+            <Pressable onPress={()=>onPress("mounth")}>
+                <Text style={styles.text(selectedRange === "mounth", darkMode)}>mounth</Text>
             </Pressable>
-            <Pressable style={{ paddingHorizontal: 8}}
-                onPress={()=>onPress("6 mounth")}>
-                <Text style={{color: selectedRange === "6 mounth" ? darkMode ? colors.water : colors.blue : darkMode ? colors.white : colors.dark, fontSize: 20}}>6 mounth</Text>
+            <Pressable onPress={()=>onPress("6 mounth")}>
+                <Text style={styles.text(selectedRange === "6 mounth", darkMode)}>6 mounth</Text>
             </Pressable>
-            <Pressable style={{ paddingHorizontal: 8}}
-                onPress={()=>onPress("year")}>
-                <Text style={{color: selectedRange === "year" ? darkMode ? colors.water : colors.blue : darkMode ? colors.white : colors.dark, fontSize: 20}}>year</Text>
+            <Pressable onPress={()=>onPress("year")}>
+                <Text style={styles.text(selectedRange === "year", darkMode)}>year</Text>
             </Pressable>
         </View>
     )
-
 }
+
+const styles  = StyleSheet.create({
+    container: {
+        flex: 2,
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "flex-start",
+        justifyContent: "space-evenly",
+        paddingTop: 8
+    },
+
+    text: (isSelected, darkMode) => ({
+        color: isSelected ? darkMode ? colors.water : colors.blue : darkMode ? colors.white : colors.dark,
+        fontSize: 20,
+        fontWeight: '500'
+    })
+})

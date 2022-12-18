@@ -134,15 +134,15 @@ export default function Home({navigation, route}) {
 
 
   return (
-    <View style={{...styles.container, backgroundColor: darkMode?colors.dark:colors.white}}
+    <View style={styles.container(darkMode)}
     onLayout={onLayoutRootView} >
-      <StatusBar style={darkMode?"light":"dark"} />
-      <View style={{flex: 3, width:"100%", justifyContent: "center", alignItems: "center"}}>
+      <StatusBar style={ darkMode ? "light" : "dark"} />
+      <View style={styles.dashboard}>
         <ModeSwitch/>
         <RangeSelector/>
       </View>
 
-      <View style={{flex: 7, width:"100%", justifyContent: "center", alignItems: "center", paddingRight:10}}>
+      <View style={styles.chart}>
 
         {ready ? <LineChart
           data={{
@@ -169,19 +169,19 @@ export default function Home({navigation, route}) {
         /> : <ActivityIndicator size="large" /> }
       </View>
 
-      <View style={{flex: 1, width:"100%", flexDirection: "row", justifyContent: "space-evenly", alignItems: "center", paddingBottom:20}} >
+      <View style={styles.buttomSide} >
         
-        <Text style={{color: darkMode ? colors.white : colors.dark, fontSize: 20}}>{"1"}</Text>
-        <Pressable style={{backgroundColor: darkMode ? colors.blue : colors.water, padding: 8, borderRadius: 12}}
+        <Text style={styles.text(darkMode)}>{"1"}</Text>
+        <Pressable style={styles.currency(darkMode)}
                     onPress={() => navigation.navigate("CurrencySelector", {operation:"setBase"})}>
-          <Text style={{color: darkMode ? colors.white : colors.dark, fontSize: 20}}>{base}</Text>
+          <Text style={styles.text(darkMode)}>{base}</Text>
         </Pressable>
-        <Text style={{color: darkMode ? colors.white : colors.dark, fontSize: 20}}>{"="}</Text>
-        <Text style={{color: darkMode ? colors.white : colors.dark, fontSize: 20}}>{ current && ready ? current[current.length-1] : "-------"}</Text>
+        <Text style={styles.text(darkMode)}>{"="}</Text>
+        <Text style={styles.text(darkMode)}>{ current && ready ? current[current.length-1] : "-------"}</Text>
         
-        <Pressable style={{backgroundColor: darkMode ? colors.blue : colors.water, padding: 8, borderRadius: 12}}
+        <Pressable style={styles.currency(darkMode)}
                     onPress={() => navigation.navigate("CurrencySelector", {operation:"setTarget"})}>
-          <Text style={{color: darkMode ? colors.white : colors.dark, fontSize: 20}}>{target}</Text>
+          <Text style={styles.text(darkMode)}>{target}</Text>
         </Pressable>
       </View>
     </View>
@@ -190,10 +190,45 @@ export default function Home({navigation, route}) {
 
 
 const styles = StyleSheet.create({
-    container: {
+    container: (darkMode) =>({
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: darkMode ? colors.dark : colors.white,
       alignItems: 'center',
       justifyContent: 'center',
+    }),
+
+    dashboard: {
+      flex: 3,
+      width:"100%",
+      justifyContent: "center",
+      alignItems: "center"
     },
+
+    chart: {
+      flex: 7,
+      width:"100%",
+      justifyContent: "center",
+      alignItems: "center",
+      paddingRight:10
+    },
+
+    buttomSide: {
+      flex: 1,
+      width:"100%",
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+      alignItems: "center",
+      paddingBottom:20
+    },
+
+    text: (darkMode) => ({
+      color: darkMode ? colors.white : colors.dark,
+      fontSize: 20
+    }),
+
+    currency: (darkMode) => ({
+      backgroundColor: darkMode ? colors.blue : colors.water,
+      padding: 8,
+      borderRadius: 12
+    })
   });
