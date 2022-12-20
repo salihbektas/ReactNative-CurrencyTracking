@@ -22,11 +22,11 @@ export default function RangeSelector(){
             <Pressable onPress={()=>onPress("week")}>
                 <Text style={styles.text(selectedRange === "week", darkMode)}>week</Text>
             </Pressable>
-            <Pressable onPress={()=>onPress("mounth")}>
-                <Text style={styles.text(selectedRange === "mounth", darkMode)}>mounth</Text>
+            <Pressable onPress={()=>onPress("month")}>
+                <Text style={styles.text(selectedRange === "month", darkMode)}>month</Text>
             </Pressable>
-            <Pressable onPress={()=>onPress("6 mounth")}>
-                <Text style={styles.text(selectedRange === "6 mounth", darkMode)}>6 mounth</Text>
+            <Pressable onPress={()=>onPress("6 month")}>
+                <Text style={styles.text(selectedRange === "6 month", darkMode)}>6 month</Text>
             </Pressable>
             <Pressable onPress={()=>onPress("year")}>
                 <Text style={styles.text(selectedRange === "year", darkMode)}>year</Text>

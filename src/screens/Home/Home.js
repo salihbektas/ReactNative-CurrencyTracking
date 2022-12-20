@@ -30,11 +30,11 @@ export default function Home({navigation, route}) {
       starter = 6
       seperator = 1
       break;
-    case "mounth":
+    case "month":
       starter = 30
       seperator = 6
       break;
-    case "6 mounth":
+    case "6 month":
       starter = 180
       seperator = 36
       break;
