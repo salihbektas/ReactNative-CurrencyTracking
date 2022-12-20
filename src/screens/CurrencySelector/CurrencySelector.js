@@ -10,6 +10,8 @@ export default function CurrencySelector({navigation, route}){
     const [input, setInput] = useState("")
     const [displayed, setDisplayed] = useState(currencies)
     const darkMode = useCurrencies().darkMode
+    const base = useCurrencies().base
+    const target = useCurrencies().target
     const dispatch = useCurrencyDispatch()
 
     useEffect(()=>{
@@ -18,6 +20,10 @@ export default function CurrencySelector({navigation, route}){
 
 
     function onPress(item){
+        if(base === item || target === item){
+            navigation.goBack()
+            return
+        }
         
         dispatch({
             type:route.params.operation,
