@@ -11,9 +11,10 @@ import * as SplashScreen from 'expo-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-export default function Home({navigation, route}) {
+export default function Home({navigation}) {
 
-  const [current, setCurrent] = useState([])
+  const [historical, setHistorical] = useState([])
+  const [latest, setlatest] = useState("------")
   const [appIsReady, setAppIsReady] = useState(false)
   const base = useCurrencies().base
   const target = useCurrencies().target
@@ -70,10 +71,10 @@ export default function Home({navigation, route}) {
       data[i] = receivedData[data[i]][target]
     }
 
-    setCurrent(data)
+    setHistorical(data)
   }
 
-  function getir() {
+  function getHistorical() {
     axios.get(`https://api.exchangerate.host/timeseries?start_date=${subtractDays(starter)}&end_date=${subtractDays(0)}&base=${base}&symbols=${target}`)
     .then(response => saveData(response.data.rates))
     .catch(error => {
@@ -82,19 +83,33 @@ export default function Home({navigation, route}) {
     });
   }
 
+  function getLatest() {
+    axios.get(`https://api.exchangerate.host/latest?base=${base}&symbols=${target}`)
+    .then(response => setlatest(response.data.rates[target]))
+    .catch(error => {
+      console.error(error)
+      alert("database could not be reached")
+    });
+  }
+
 
   useEffect(() => {
-    getir()
+    getHistorical()
   }, [base, target, range])
 
+  useEffect(() => {
+    setlatest("------")
+    getLatest()
+  }, [base, target])
+
 
   useEffect(() => {
-    if(current.length!== 0)
+    if(historical.length!== 0)
       dispatch({
         type:"setReady",
         ready:true
       })
-  }, [JSON.stringify(current)])
+  }, [JSON.stringify(historical)])
 
   useEffect(() => {
     async function prepare() {
@@ -147,7 +162,7 @@ export default function Home({navigation, route}) {
         {ready ? <LineChart
           data={{
             labels: labels,
-            datasets: [{data: current}]
+            datasets: [{data: historical}]
           }}
           width={Dimensions.get("window").width}
           height={Dimensions.get("window").height*0.7}
@@ -177,7 +192,7 @@ export default function Home({navigation, route}) {
           <Text style={styles.text(darkMode)}>{base}</Text>
         </Pressable>
         <Text style={styles.text(darkMode)}>{"="}</Text>
-        <Text style={styles.text(darkMode)}>{ current && ready ? current[current.length-1] : "-------"}</Text>
+        <Text style={styles.text(darkMode)}>{latest}</Text>
         
         <Pressable style={styles.currency(darkMode)}
                     onPress={() => navigation.navigate("CurrencySelector", {operation:"setTarget"})}>
