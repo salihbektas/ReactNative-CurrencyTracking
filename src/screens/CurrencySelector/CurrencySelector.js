@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FlatList, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
+import { FlatList, Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
 import currencies from "../../../currencies.json";
 import colors from "../../Colors";
 import { useCurrencies, useCurrencyDispatch } from "../../context/CurrencyContext";
@@ -45,6 +45,9 @@ export default function CurrencySelector({navigation, route}){
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
             <View style={styles.mainContainer(darkMode)}>
                 <View style={styles.topSide}>
+                    <Pressable onPress={() => navigation.goBack()} style={styles.backContainer} >
+                        <Image source={require("../../../assets/arrow.png")} style={styles.back(darkMode)} />
+                    </Pressable>
                     <TextInput
                         style={styles.textInput(darkMode)}
                         onChangeText={setInput}
@@ -52,6 +55,7 @@ export default function CurrencySelector({navigation, route}){
                         placeholderTextColor={darkMode ? colors.white : colors.dark}
                         maxLength={3}
                     />
+                    <View style={styles.hiddenView} />
                 </View>
                 <FlatList style={styles.flatList}
                     data = {displayed}
@@ -74,9 +78,18 @@ const styles = StyleSheet.create({
     topSide: {
         height:100,
         width:"100%",
-        justifyContent:"center",
-        alignItems:"center"
+        flexDirection:"row",
+        alignItems:"center",
+        paddingHorizontal:16
     },
+
+    backContainer: { marginRight:"auto" },
+
+    back: (darkMode) => ({
+        height: 30,
+        width: 30,
+        tintColor: darkMode ? colors.white : colors.dark
+    }),
 
     textInput: darkMode => ({
         width:"50%",
@@ -88,6 +101,11 @@ const styles = StyleSheet.create({
         fontSize: 24,
         paddingLeft: 8
     }),
+
+    hiddenView:{ 
+        width:30,
+        marginLeft:"auto"
+    },
 
     currencyCell: (darkMode, index) => ({
         width:"25%",
