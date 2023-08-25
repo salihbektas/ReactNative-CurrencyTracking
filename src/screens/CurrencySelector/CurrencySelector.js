@@ -1,132 +1,137 @@
-import { useEffect, useState } from "react";
-import { FlatList, Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
-import currencies from "../../../currencies.json";
-import colors from "../../Colors";
-import { useCurrencies, useCurrencyDispatch } from "../../context/CurrencyContext";
+import { useEffect, useState } from 'react'
+import {
+  FlatList,
+  Image,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native'
+import currencies from '../../../currencies.json'
+import colors from '../../Colors'
+import { useCurrencies, useCurrencyDispatch } from '../../context/CurrencyContext'
 
+export default function CurrencySelector({ navigation, route }) {
+  const [input, setInput] = useState('')
+  const [displayed, setDisplayed] = useState(currencies)
+  const darkMode = useCurrencies().darkMode
+  const base = useCurrencies().base
+  const target = useCurrencies().target
+  const dispatch = useCurrencyDispatch()
 
-export default function CurrencySelector({navigation, route}){
+  useEffect(() => {
+    setDisplayed(currencies.filter((currency) => currency.includes(input.toUpperCase())))
+  }, [input])
 
-    const [input, setInput] = useState("")
-    const [displayed, setDisplayed] = useState(currencies)
-    const darkMode = useCurrencies().darkMode
-    const base = useCurrencies().base
-    const target = useCurrencies().target
-    const dispatch = useCurrencyDispatch()
-
-    useEffect(()=>{
-        setDisplayed(currencies.filter(currency =>currency.includes(input.toUpperCase())))
-    },[input])
-
-
-    function onPress(item){
-        if(base === item || target === item){
-            navigation.goBack()
-            return
-        }
-        
-        dispatch({
-            type:route.params.operation,
-            base:item,
-            target:item
-        })
-        navigation.navigate("Home", {operation: route.params.operation, currency:item})
+  function onPress(item) {
+    if (base === item || target === item) {
+      navigation.goBack()
+      return
     }
 
-    const renderItem = ({ item, index }) => (
+    dispatch({
+      type: route.params.operation,
+      base: item,
+      target: item
+    })
+    navigation.navigate('Home', { operation: route.params.operation, currency: item })
+  }
 
-        <Pressable onPress={() => onPress(item)} style={styles.currencyCell(darkMode, index)}>
-            <Text style={styles.text(darkMode)}>{item}</Text>
-        </Pressable>
+  const renderItem = ({ item, index }) => (
+    <Pressable onPress={() => onPress(item)} style={styles.currencyCell(darkMode, index)}>
+      <Text style={styles.text(darkMode)}>{item}</Text>
+    </Pressable>
+  )
 
-      );
-
-    return(
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
-            <View style={styles.mainContainer(darkMode)}>
-                <View style={styles.topSide}>
-                    <Pressable onPress={() => navigation.goBack()} style={styles.backContainer} >
-                        <Image source={require("../../../assets/arrow.png")} style={styles.back(darkMode)} />
-                    </Pressable>
-                    <TextInput
-                        style={styles.textInput(darkMode)}
-                        onChangeText={setInput}
-                        placeholder="search"
-                        placeholderTextColor={darkMode ? colors.white : colors.dark}
-                        maxLength={3}
-                    />
-                    <View style={styles.hiddenView} />
-                </View>
-                <FlatList style={styles.flatList}
-                    data = {displayed}
-                    renderItem = {renderItem}
-                    keyExtractor = {(_, index) => index}
-                    ItemSeparatorComponent={() => <View style={styles.seperator(darkMode)} />}
-                    numColumns={4}
-                />
-            </View>
-        </TouchableWithoutFeedback>
-    )
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.mainContainer(darkMode)}>
+        <View style={styles.topSide}>
+          <Pressable onPress={() => navigation.goBack()} style={styles.backContainer}>
+            <Image source={require('../../../assets/arrow.png')} style={styles.back(darkMode)} />
+          </Pressable>
+          <TextInput
+            style={styles.textInput(darkMode)}
+            onChangeText={setInput}
+            placeholder='search'
+            placeholderTextColor={darkMode ? colors.white : colors.dark}
+            maxLength={3}
+          />
+          <View style={styles.hiddenView} />
+        </View>
+        <FlatList
+          style={styles.flatList}
+          data={displayed}
+          renderItem={renderItem}
+          keyExtractor={(_, index) => index}
+          ItemSeparatorComponent={() => <View style={styles.seperator(darkMode)} />}
+          numColumns={4}
+        />
+      </View>
+    </TouchableWithoutFeedback>
+  )
 }
 
 const styles = StyleSheet.create({
-    mainContainer: darkMode => ({
-        flex:1,
-        backgroundColor: darkMode ? colors.dark : colors.white
-    }),
+  mainContainer: (darkMode) => ({
+    flex: 1,
+    backgroundColor: darkMode ? colors.dark : colors.white
+  }),
 
-    topSide: {
-        height:100,
-        width:"100%",
-        flexDirection:"row",
-        alignItems:"center",
-        paddingHorizontal:16
-    },
+  topSide: {
+    height: 100,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16
+  },
 
-    backContainer: { marginRight:"auto" },
+  backContainer: { marginRight: 'auto' },
 
-    back: (darkMode) => ({
-        height: 30,
-        width: 30,
-        tintColor: darkMode ? colors.white : colors.dark
-    }),
+  back: (darkMode) => ({
+    height: 30,
+    width: 30,
+    tintColor: darkMode ? colors.white : colors.dark
+  }),
 
-    textInput: darkMode => ({
-        width:"50%",
-        height:40,
-        borderWidth:2,
-        borderColor: darkMode ? colors.white : colors.dark,
-        borderRadius: 8,
-        color: darkMode ? colors.white : colors.dark,
-        fontSize: 24,
-        paddingLeft: 8
-    }),
+  textInput: (darkMode) => ({
+    width: '50%',
+    height: 40,
+    borderWidth: 2,
+    borderColor: darkMode ? colors.white : colors.dark,
+    borderRadius: 8,
+    color: darkMode ? colors.white : colors.dark,
+    fontSize: 24,
+    paddingLeft: 8
+  }),
 
-    hiddenView:{ 
-        width:30,
-        marginLeft:"auto"
-    },
+  hiddenView: {
+    width: 30,
+    marginLeft: 'auto'
+  },
 
-    currencyCell: (darkMode, index) => ({
-        width:"25%",
-        alignItems:"center",
-        borderLeftColor: darkMode ? colors.water : colors.blue,
-        borderLeftWidth: index % 4 !== 0 ? 3 : 0
-    }),
+  currencyCell: (darkMode, index) => ({
+    width: '25%',
+    alignItems: 'center',
+    borderLeftColor: darkMode ? colors.water : colors.blue,
+    borderLeftWidth: index % 4 !== 0 ? 3 : 0
+  }),
 
-    text: darkMode => ({
-        fontSize:24,
-        color: darkMode ? colors.white : colors.dark
-    }),
+  text: (darkMode) => ({
+    fontSize: 24,
+    color: darkMode ? colors.white : colors.dark
+  }),
 
-    flatList: {
-        flex:1,
-        width:"100%"
-    },
+  flatList: {
+    flex: 1,
+    width: '100%'
+  },
 
-    seperator: darkMode => ({
-        height: 3,
-        backgroundColor: darkMode ? colors.water : colors.blue
-    })
-
+  seperator: (darkMode) => ({
+    height: 3,
+    backgroundColor: darkMode ? colors.water : colors.blue
+  })
 })
